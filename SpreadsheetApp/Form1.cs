@@ -5,6 +5,7 @@ using System.Data;
 using System.Drawing;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -43,8 +44,10 @@ namespace SpreadsheetApp
             oper = int.Parse(oper_textBox.Text);
             sleep = int.Parse(sleep_textBox.Text);
             SharableSpreadSheet spreadSheet = new SharableSpreadSheet(rows, cols, threds);
+            dataGridView1.DataSource = spreadSheet.dataTable;
             Program.Simulator(rows,cols,threds,oper,sleep, spreadSheet);
-            dataGridView1.DataSource = spreadSheet;
+            
+            
         }
     }
 }

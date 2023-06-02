@@ -7,7 +7,7 @@ using System.Data;
     public class SharableSpreadSheet
     {
         private readonly ReaderWriterLockSlim lockObject = new ReaderWriterLockSlim();
-        DataTable dataTable;
+        public DataTable dataTable;
         public int nR;
         public int nC;
 
@@ -50,14 +50,15 @@ using System.Data;
         public void SetCell(int row, int col, String str)
         {
             // Return the string at [row, col]
-            lockObject.EnterReadLock();
+            lockObject.EnterWriteLock();
             try
             {
                 dataTable.Rows[row][col] = str;
+            
             }
             finally
             {
-                lockObject.ExitReadLock();
+                lockObject.ExitWriteLock();
             }
         }
         public Tuple<int, int> SearchString(string str)

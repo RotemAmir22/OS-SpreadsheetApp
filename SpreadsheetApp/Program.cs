@@ -52,7 +52,7 @@ namespace SpreadsheetApp
                 for (int j = 0; j < col; j++)
                 {
                     string randomStr = GenerateRandomCharacter() + GenerateRandomCharacter() + GenerateRandomCharacter();
-                    spreadSheet.SetCell(i, j, randomStr);
+                    spreadSheet.SetCell(i,j,randomStr);
                 }
             }
             //spreadSheet.PrintDataTable();
@@ -88,8 +88,10 @@ namespace SpreadsheetApp
                 switch (choice)
                 {
                     case 1:
-                        Tuple<int, int> size = spreadSheet.getSize();
+                        //Tuple<int, int> size = spreadSheet.getSize();
                         //Console.WriteLine(name + "getSize() -> " + size.ToString());
+                        sencase = key.Next(2) == 1;
+                        spreadSheet.SetAll(randomStr1, randomStr2, sencase);
                         break;
                     case 2:
                         sencase = key.Next(2) == 1;
@@ -97,73 +99,88 @@ namespace SpreadsheetApp
                         //Console.WriteLine(name + "SetAll() -> Old string: " + randomStr1 + ", New string: " + randomStr2 + ". Case sensitive: " + sencase);
                         break;
                     case 3:
-                        string str = randomStr1;
-                        sencase = key.Next(2) == 1;
-                        Tuple<int, int>[] result = spreadSheet.FindAll(str, sencase);
-                        string resultString = string.Join("\n\t", result.Select(tuple => tuple.ToString()));
-
+                        //string str = randomStr1;
+                        //sencase = key.Next(2) == 1;
+                        //Tuple<int, int>[] result = spreadSheet.FindAll(str, sencase);
+                        //string resultString = string.Join("\n\t", result.Select(tuple => tuple.ToString()));
                         //Console.WriteLine(name + "FindAll() -> String: '" + str + "', Case sensitive: " + sencase + ", Found points:\n\t" + resultString);
+                        int col11 = key.Next(0, spreadSheet.nC);
+                        int col21 = key.Next(0, spreadSheet.nC);
+                        spreadSheet.ExchangeCols(col11, col21);
                         break;
                     case 4:
-                        int num = key.Next(0, spreadSheet.nC);
-                        spreadSheet.AddCol(num + 1);
+                        int num1 = key.Next(0, spreadSheet.nC);
+                        spreadSheet.AddCol(num1 + 1);
                         //Console.WriteLine(name + "AddCol() -> After added col: " + num);
                         break;
                     case 5:
-                        int num_ = key.Next(0, spreadSheet.nR);
-                        spreadSheet.AddRow(num_ + 1);
+                        int num_1 = key.Next(0, spreadSheet.nR);
+                        spreadSheet.AddRow(num_1 + 1);
                         //Console.WriteLine(name + "AddRow() -> After added row: " + num_);
                         break;
                     case 6:
-                        int startC = key.Next(0, spreadSheet.nC);
-                        int endC = key.Next(startC, spreadSheet.nC);
-                        int startR = key.Next(0, spreadSheet.nR);
-                        int endR = key.Next(startR, spreadSheet.nR);
-                        string toSearch = randomStr1;
-                        Tuple<int, int> searchRes = spreadSheet.SearchInRange(startC, endC, startR, endR, toSearch);
+                        //int startC = key.Next(0, spreadSheet.nC);
+                        //int endC = key.Next(startC, spreadSheet.nC);
+                        //int startR = key.Next(0, spreadSheet.nR);
+                        //int endR = key.Next(startR, spreadSheet.nR);
+                        //string toSearch = randomStr1;
+                        //Tuple<int, int> searchRes = spreadSheet.SearchInRange(startC, endC, startR, endR, toSearch);
                         //Console.WriteLine(name + "SearchInRange() -> String: " + toSearch + " Range: cols[" + startC + "-" + endC + "], rows[" + startR + "-" + endR + "]\n\t  Found: " + searchRes.ToString());
+                        int row12 = key.Next(0, spreadSheet.nR);
+                        int row22 = key.Next(0, spreadSheet.nR);
+                        spreadSheet.ExchangeRows(row12, row22);
                         break;
                     case 7:
-                        int stC = key.Next(0, spreadSheet.nC);
-                        string toSC = randomStr1;
-                        int idx = spreadSheet.SearchInCol(stC, toSC);
+                        //int stC = key.Next(0, spreadSheet.nC);
+                        //string toSC = randomStr1;
+                        //int idx = spreadSheet.SearchInCol(stC, toSC);
                         //Console.WriteLine(name + "SearchInCol() -> String: " + toSC + " Col: " + stC + "\n\t  Found: " + idx);
+                        int col13 = key.Next(0, spreadSheet.nC);
+                        int col23 = key.Next(0, spreadSheet.nC);
+                        spreadSheet.ExchangeCols(col13, col23);
                         break;
                     case 8:
-                        int stR = key.Next(0, spreadSheet.nR);
-                        string toSR = randomStr1;
-                        int indx = spreadSheet.SearchInRow(stR, toSR);
+                        //int stR = key.Next(0, spreadSheet.nR);
+                        //string toSR = randomStr1;
+                        //int indx = spreadSheet.SearchInRow(stR, toSR);
                         // Console.WriteLine(name + "SearchInRow() -> String: " + toSR + " Col: " + stR + "\n\t  Found: " + indx);
+                        sencase = key.Next(2) == 1;
+                        spreadSheet.SetAll(randomStr1, randomStr2, sencase);
                         break;
                     case 9:
-                        int col1 = key.Next(0, spreadSheet.nC);
-                        int col2 = key.Next(0, spreadSheet.nC);
-                        spreadSheet.ExchangeCols(col1, col2);
+                        int col14 = key.Next(0, spreadSheet.nC);
+                        int col24 = key.Next(0, spreadSheet.nC);
+                        spreadSheet.ExchangeCols(col14, col24);
                         //Console.WriteLine(name + "ExchangeCols() -> cols " + col1 + " and " + col2 + " have been switches successfully");
                         break;
                     case 10:
-                        int row1 = key.Next(0, spreadSheet.nR);
-                        int row2 = key.Next(0, spreadSheet.nR);
-                        spreadSheet.ExchangeRows(row1, row2);
+                        int row15 = key.Next(0, spreadSheet.nR);
+                        int row25 = key.Next(0, spreadSheet.nR);
+                        spreadSheet.ExchangeRows(row15, row25);
                         //Console.WriteLine(name + "ExchangeRows() -> rows " + row1 + " and " + row2 + " have been switches successfully");
                         break;
                     case 11:
-                        string findS = randomStr1;
-                        Tuple<int, int> location = spreadSheet.SearchString(findS);
+                        //string findS = randomStr1;
+                        //Tuple<int, int> location = spreadSheet.SearchString(findS);
                         //Console.WriteLine(name + "SearchString() -> string " + findS + " is found in cell " + location.ToString());
+                        sencase = key.Next(2) == 1;
+                        spreadSheet.SetAll(randomStr1, randomStr2, sencase);
                         break;
                     case 12:
-                        int col = key.Next(0, spreadSheet.nC);
-                        int row = key.Next(0, spreadSheet.nR);
+                        int col6 = key.Next(0, spreadSheet.nC);
+                        int row6 = key.Next(0, spreadSheet.nR);
                         string set = randomStr1;
-                        spreadSheet.SetCell(row, col, set);
+                        spreadSheet.SetCell(row6, col6, set);
                         // Console.WriteLine(name + "SetCell() -> cell " + "(" + row + ", " + col + ")" + " value has been changed to: " + set);
                         break;
                     case 13:
-                        int indxC = key.Next(0, spreadSheet.nC);
-                        int indxR = key.Next(0, spreadSheet.nR);
-                        string value = spreadSheet.GetCell(indxR, indxC);
+                        //int indxC = key.Next(0, spreadSheet.nC);
+                        //int indxR = key.Next(0, spreadSheet.nR);
+                        //string value = spreadSheet.GetCell(indxR, indxC);
                         //Console.WriteLine(name + "GetCell() -> cell " + "(" + indxR + ", " + indxC + ")" + " value is: " + value);
+                        int row17 = key.Next(0, spreadSheet.nR);
+                        int row27 = key.Next(0, spreadSheet.nR);
+                        spreadSheet.ExchangeRows(row17, row27);
                         break;
                     default:
                         break;
