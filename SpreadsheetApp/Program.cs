@@ -46,7 +46,7 @@ namespace SpreadsheetApp
             return randomChar.ToString();
         }
 
-        public static void Simulator(int row, int col, int nThreads, int nOper, int mssleep, SharableSpreadSheet spreadSheet)
+        public static void Simulator(int row, int col ,SharableSpreadSheet spreadSheet)
         {
             //SharableSpreadSheet.SharableSpreadSheet spreadSheet = new SharableSpreadSheet.SharableSpreadSheet(row, col, nThreads);
             for (int i = 0; i < row; i++)
@@ -57,66 +57,8 @@ namespace SpreadsheetApp
                     spreadSheet.dataTable.Rows[i][j] = randomStr;
                 }
             }
-            //spreadSheet.PrintDataTable();
-            Thread[] threads = new Thread[nThreads];
-            for (int i = 0; i < nThreads; i++)
-            {
-                Thread thread = new Thread(() => run(spreadSheet, nOper, mssleep));
-                thread.Name = "Thread " + i.ToString();
-                threads[i] = thread; // Store the thread in an array or list
-                thread.Start();
-            }
-
-            for (int i = 0; i < nThreads; i++)
-            {
-                threads[i].Join();
-            }
-
-            //spreadSheet.PrintDataTable();
             Console.ReadLine();
-        }
-
-        static void run(SharableSpreadSheet spreadSheet, int nOper, int sleep)
-        {
-            Random rand = new Random();
-            Random key = new Random();
-            for (int i = 0; i < nOper; i++)
-            {
-                string randomStr1 = GenerateRandomCharacter() + GenerateRandomCharacter() + GenerateRandomCharacter();
-                int choice = rand.Next(1, 4);
-                switch (choice)
-                {
-                    case 1:
-                        int col6 = key.Next(0, spreadSheet.nC);
-                        int row6 = key.Next(0, spreadSheet.nR);
-                        string set = randomStr1;
-                        spreadSheet.SetCell(row6, col6, set);
-                        break;
-                    case 2:
-                        while (true) 
-                        {
-                            int num = rand.Next(2, 1000);
-                            string name = "newFile_" + num + ".txt";
-                            if (!File.Exists(name))
-                            {
-                                spreadSheet.Save("newFile_" + num + ".txt");
-                                break;
-                            }      
-                        }
-                        break;
-                    case 3:
-                        int num_ = rand.Next(2, 1000);
-                        string fileName = "newFile_" + num_ + ".txt";
-                        if (File.Exists(fileName))
-                            spreadSheet.Load(fileName);
-                        break;
-                    default:
-                        break;
-                }
-                Thread.Sleep(sleep);
-                //bye
-            }
-        }
+        }  
 
     }
 }

@@ -6,14 +6,12 @@ using System.Data;
 
     public class SharableSpreadSheet
     {
-        private readonly ReaderWriterLockSlim lockObject = new ReaderWriterLockSlim();
         public DataTable dataTable;
         public int nR;
         public int nC;
 
-        public SharableSpreadSheet(int nRows, int nCols, int nUsers = -1)
+        public SharableSpreadSheet(int nRows, int nCols)
         {
-            // nUsers used for setConcurrentSearchLimit, -1 means no limit.
             // Construct a nRows*nCols spreadsheet
             dataTable = new DataTable();
             nR = nRows;
@@ -33,93 +31,51 @@ using System.Data;
             }
         }
 
-        public void SetCell(int row, int col, String str)
+        public void Capitalize()
         {
             // Return the string at [row, col]
-            lockObject.EnterWriteLock();
-            try
-            {
-                dataTable.Rows[row][col] = str;
+            for (int i=0; i<dataTable.Rows.Count; i++)
+                for (int j = 0; j < dataTable.Columns.Count; j++)
+                    dataTable.Rows[i][j] = dataTable.Rows[i][j].ToString().ToUpper();
             
-            }
-            finally
-            {
-                lockObject.ExitWriteLock();
-            }
-        }
-
-        public Tuple<int, int> getSize()
-        {
-            // return the size of the spreadsheet in nRows, nCols
-            return Tuple.Create(nR, nC);
         }
 
         public void Save(string fileName)
         {
-            lockObject.EnterReadLock();
-            try
+            using (StreamWriter writer = new StreamWriter(fileName))
             {
-                using (StreamWriter writer = new StreamWriter(fileName))
+                for (int row = 0; row < dataTable.Rows.Count; row++)
                 {
-                    for (int row = 0; row < dataTable.Rows.Count; row++)
+                    DataRow dataRow = dataTable.Rows[row];
+                    for (int col = 0; col < dataTable.Columns.Count; col++)
                     {
-                        DataRow dataRow = dataTable.Rows[row];
-                        for (int col = 0; col < dataTable.Columns.Count; col++)
+                        string cellValue = dataRow[col].ToString();
+                        writer.Write(cellValue);
+                        if (col < dataTable.Columns.Count - 1)
                         {
-                            string cellValue = dataRow[col].ToString();
-                            writer.Write(cellValue);
-                            if (col < dataTable.Columns.Count - 1)
-                            {
-                                writer.Write(",");
-                            }
+                            writer.Write(",");
                         }
-                        writer.WriteLine();
                     }
+                    writer.WriteLine();
                 }
-            }
-            finally
-            {
-                lockObject.ExitReadLock();
             }
         }
 
         public void Load(string fileName)
-        {
-            lockObject.EnterWriteLock();
-            try
+        {  
+            using (StreamReader reader = new StreamReader(fileName))
             {
+                string line;
                 dataTable.Clear();
-                using (StreamReader reader = new StreamReader(fileName))
-                {
-                    string line;
-                    while ((line = reader.ReadLine()) != null)
-                    {
-                        string[] cellValues = line.Split(',');
-                        DataRow dataRow = dataTable.Rows.Add();
+                while ((line = reader.ReadLine()) != null)
+                { 
+                    string[] cellValues = line.Split(',');
+                    DataRow dataRow = dataTable.Rows.Add();
 
-                        for (int col = 0; col < cellValues.Length; col++)
-                        {
-                            dataRow[col] = cellValues[col].Trim();
-                        }
-                    }
+                    for (int col = 0; col < cellValues.Length; col++)
+                        dataRow[col] = cellValues[col].Trim();
                 }
             }
-            finally
-            {
-                lockObject.ExitWriteLock();
-            }
         }
-
-        public void PrintDataTable()
-        {
-            foreach (DataRow row in dataTable.Rows)
-            {
-                foreach (DataColumn col in dataTable.Columns)
-                {
-                    Console.Write(row[col] + "\t");
-                }
-                Console.WriteLine();
-            }
-        }
-        //done
+  
     }

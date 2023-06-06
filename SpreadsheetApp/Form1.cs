@@ -1,23 +1,44 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
+using System.IO;
 using System.Windows.Forms;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.Window;
 
 namespace SpreadsheetApp
 {
     public partial class Form1 : Form
     {
-        int rows, cols, threds, oper, sleep;
+
+        SharableSpreadSheet spreadSheet;
         public Form1()
         {
             InitializeComponent();
-            
+            spreadSheet = new SharableSpreadSheet(15, 8);
+            dataGridView1.DataSource = spreadSheet.dataTable;
+            Program.Simulator(15, 8, spreadSheet);
+
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            string name = "newFile_" + rows_textBox.Text + ".txt";
+            if (File.Exists(name))
+            {
+                spreadSheet.Load(name);
+                MessageBox.Show("Success", "Update!", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+            else    
+                MessageBox.Show("Cannot find this file", "Error 404", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+        }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            spreadSheet.Capitalize();
+        }
+
+        private void rows_textBox_TextChanged(object sender, EventArgs e)
+        {
+
         }
 
         private void label1_Click(object sender, EventArgs e)
@@ -38,16 +59,15 @@ namespace SpreadsheetApp
 
         private void button1_Click(object sender, EventArgs e)
         {
-            rows = int.Parse(rows_textBox.Text);
-            cols = int.Parse(col_textBox.Text);
-            threds = int.Parse(user_textBox.Text);
-            oper = int.Parse(oper_textBox.Text);
-            sleep = int.Parse(sleep_textBox.Text);
-            SharableSpreadSheet spreadSheet = new SharableSpreadSheet(rows, cols, threds);
-            dataGridView1.DataSource = spreadSheet.dataTable;
-            Program.Simulator(rows,cols,threds,oper,sleep, spreadSheet);
-            
-            
+            string name = "newFile_" + rows_textBox.Text + ".txt";
+            if (!File.Exists(name))
+            {
+                spreadSheet.Save(name);
+                MessageBox.Show("Success", "Update!", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+            else
+                MessageBox.Show("This number already taken!", "Error 404", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
         }
     }
 }
